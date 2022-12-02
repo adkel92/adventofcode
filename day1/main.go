@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"log"
-	"math"
 	"os"
 	"strconv"
 )
@@ -30,7 +29,7 @@ func main() {
 
 	// Loop through each line
 	current := 0
-	total := 0
+	total := [3]int{0, 0, 0}
 	for _, calorie := range lines {
 		// Convert to number
 		num, _ := strconv.Atoi(calorie)
@@ -40,10 +39,16 @@ func main() {
 
 		// If calorie is blank then calculate if this current is higher than total
 		if calorie == "" {
-			total = int(math.Max(float64(total), float64(current)))
+			for i := range total {
+				if current >= total[i] {
+					total[i], current = current, total[i]
+				}
+			}
 			current = 0
 		}
 	}
 
-	fmt.Println("Answer 1", total)
+	fmt.Println("Answer 1", total[0])
+	fmt.Println("Answer 2", total[0]+total[1]+total[2])
+
 }
