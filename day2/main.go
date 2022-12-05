@@ -24,7 +24,8 @@ const (
 
 // Score Count
 type score struct {
-	userScore int
+	userScore      int
+	predictedScore int
 }
 
 func main() {
@@ -95,5 +96,41 @@ func main() {
 		}
 	}
 
+	// Set predictedScore
+	predictedScore := 0
+
+	// Loop through each line same as before
+	for _, round := range lines {
+		items := strings.Fields(round)
+
+		opponent, user := game[items[0]], items[1]
+
+		// X means you have to lose
+		// -1 of opponenet will always result in a lose
+		if user == "X" {
+			score := opponent - 1
+			if score == 0 {
+				score = DRAW
+			}
+			predictedScore += LOSS + score
+		}
+
+		// Y means you need to draw
+		if user == "Y" {
+			predictedScore += DRAW + opponent
+		}
+
+		// Z means you need to WIN
+		// +1 on opponent will result in win unless it equals 4
+		if user == "Z" {
+			score := opponent + 1
+			if score == 4 {
+				score = 1
+			}
+			predictedScore += WIN + score
+		}
+	}
+
 	fmt.Println("Answer 1 =", userScore)
+	fmt.Println("Answer 2 =", predictedScore)
 }
